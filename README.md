@@ -2,8 +2,7 @@
 
 This repository contains the code that accompanies the protocol paper
 
-*Müller, Andreas, et al. *
-*Organelle-specific segmentation, spatial analysis and visualization of volume electron microscopy datasets* 
+*Müller, Andreas, et al. Organelle-specific segmentation, spatial analysis and visualization of volume electron microscopy datasets* 
 
 The following subfolders contain code that augment described protocol steps: 
 
