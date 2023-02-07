@@ -1,6 +1,7 @@
 import numpy as np
 from six.moves import range, zip, map, reduce, filter
 from six import string_types
+import warnings
 from csbdeep.models import CARE, Config
 from csbdeep.utils import _raise, axes_check_and_normalize, axes_dict, backend_channels_last
 from csbdeep.data import PercentileNormalizer, PadAndCropResizer
@@ -98,6 +99,42 @@ def weighted_cce(weights=(1,1)):
         return loss
     return _loss
 
+def dice_loss(y_true, y_pred):
+    intersection = K.sum(y_true * y_pred)
+    union = K.sum(y_true) + K.sum(y_pred)
+    return 1.-(2. * intersection + K.epsilon()) / (union + K.epsilon())
+
+def dice_bce(bce_weights = (1,1), dice_weight=.1): 
+    _bce = weighted_bce(weights=bce_weights)
+    def _loss(y_true, y_pred):
+        # return dice_loss(y_true, y_pred)
+        return dice_weight*dice_loss(y_true, y_pred) + _bce(y_true, y_pred)
+    return _loss
+
+def metric_precision(y_true, y_pred):
+    y_pred = K.round(y_pred)
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def metric_recall(y_true, y_pred):
+    y_pred = K.round(y_pred)
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def metric_f1(y_true, y_pred):
+    y_pred = K.round(y_pred)
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    recall = true_positives / (possible_positives + K.epsilon())
+    f1 = 2*(precision*recall)/(precision+recall+K.epsilon())
+    return f1
+    
 
 class UNet(CARE):
     @property
@@ -125,10 +162,16 @@ class UNet(CARE):
         super().prepare_for_training(optimizer=optimizer,**kwargs)
         self.config.train_loss = tmp
 
-        loss = weighted_bce(self.config.train_class_weight) if self.config.train_loss=="binary_crossentropy" else weighted_cce(self.config.train_class_weight)
+        if self.config.train_loss=="binary_crossentropy": 
+            print("Using binary crossentropy loss")
+            loss = dice_bce(bce_weights=self.config.train_class_weight, dice_weight=1)
+        elif self.config.train_loss=="categorical_crossentropy":
+            loss = weighted_cce(self.config.train_class_weight)
+        else: 
+            raise ValueError(f"Unknown loss function {self.config.train_loss}")
 
-        loss = weighted_bce(self.config.train_class_weight)
-        self.keras_model.compile(optimizer=optimizer, loss=loss)
+        metrics = (metric_precision,metric_recall,metric_f1)
+        self.keras_model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
     
     def train(self, X,Y, validation_data, data_gen = None,  epochs=None, steps_per_epoch=None):
         """Train the neural network with the given data.
