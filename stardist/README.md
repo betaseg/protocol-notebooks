@@ -35,4 +35,4 @@ For general question regarding those parameters, please see https://github.com/s
 
 ## Usage
 
-Simply run the [notebook](stardist.ipynb) for training a stardist model and applying it on new stacks. 
+Simply run the [notebook](run_stardist.ipynb) for training a stardist model and applying it on new stacks. 

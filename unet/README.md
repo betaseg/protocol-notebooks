@@ -36,4 +36,4 @@ The code in this folder demonstrates how to train a 3D U-Net model to perform se
 
 ## Usage
 
-Simply run the [notebook](unet.ipynb) for training a U-Net model and subsequent prediction on new stacks. 
+Simply run the [notebook](run_unet.ipynb) for training a U-Net model and subsequent prediction on new stacks. 

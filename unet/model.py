@@ -104,7 +104,7 @@ def dice_loss(y_true, y_pred):
     union = K.sum(y_true) + K.sum(y_pred)
     return 1.-(2. * intersection + K.epsilon()) / (union + K.epsilon())
 
-def dice_bce(bce_weights = (1,1), dice_weight=.1): 
+def dice_bce(bce_weights = (1,1), dice_weight=1): 
     _bce = weighted_bce(weights=bce_weights)
     def _loss(y_true, y_pred):
         # return dice_loss(y_true, y_pred)
