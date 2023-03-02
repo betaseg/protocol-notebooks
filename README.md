@@ -11,7 +11,7 @@ The following subfolders contain code that augment described protocol steps:
     
     ![](figs/plot.png)
 
-    Notebooks relating to the generation of organelle interaction plots
+    Notebooks relating to the generation of organelle spatial interaction plots
 
 2. [3D segmentation of golgi apparatus with U-Net](./unet)
    
