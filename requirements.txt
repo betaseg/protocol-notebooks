@@ -1,0 +1,5 @@
+numpy 
+seaborn
+z5py
+stardist 
+
