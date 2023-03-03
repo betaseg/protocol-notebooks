@@ -1,5 +1,7 @@
 numpy 
 seaborn
 z5py
+pandas
 stardist 
+tqdm
 
