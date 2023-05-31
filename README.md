@@ -27,7 +27,7 @@ The following subfolders contain code that augment described protocol steps:
     Training and prediction notebooks for a 3D U-Net stardist model for segmentation of secretory granules from FIB-SEM volumes
 
 
-# Installation
+## Installation
 
 Please create a proper `conda` environment first (see [here ]([url](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html)) for a guide).  
 
