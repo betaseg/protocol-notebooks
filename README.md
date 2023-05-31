@@ -29,7 +29,7 @@ The following subfolders contain code that augment described protocol steps:
 
 ## Installation
 
-Please create a proper `conda` environment first (see [here ]([url](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html)) for a guide).  
+Please create a proper `conda` environment first (see [here](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html) for a guide).  
 
 Then install the following dependencies: 
 ```
