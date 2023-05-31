@@ -1,5 +1,6 @@
 # Protocol Notebooks 
 
+
 This repository contains the code that accompanies the protocol paper
 
 *Müller, Andreas, et al. Organelle-specific segmentation, spatial analysis and visualization of volume electron microscopy datasets* 
@@ -24,3 +25,14 @@ The following subfolders contain code that augment described protocol steps:
     ![](figs/granules.png)
 
     Training and prediction notebooks for a 3D U-Net stardist model for segmentation of secretory granules from FIB-SEM volumes
+
+
+# Installation
+
+Please create a proper `conda` environment first (see [here ]([url](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html)) for a guide).  
+
+Then install the following dependencies: 
+```
+conda install -c conda-forge z5py
+pip install -r requirements.txt
+```
