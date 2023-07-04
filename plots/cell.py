@@ -1,10 +1,10 @@
-""" Helper classes to wrap a cellsketch project 
+""" Helper classes to wrap a cellsketch project
 """
 
 import z5py
 from pathlib import Path
 import os
-from tqdm.auto import tqdm 
+from tqdm.auto import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -24,15 +24,15 @@ class Cell:
 
     def contains(self, volume_name):
         return self.name + '_' + volume_name in self.file
-        
+
     def keys(self):
         matches = tuple(re.match(f'{self.name}_(.*)', k) for k in self.file.keys())
         return tuple(m.groups()[0] for m in matches if m is not None and len(m.groups()) > 0)
 
     def get_bounds(self):
-        cellbound_path = self.file.attrs["cellbounds"]
-        return cellbound_path
-    
+        for cellbound in self.file.attrs["cellbounds"]:
+            return cellbound
+
     def read_volume(self, volume_name):
         if volume_name is None:
             return None
@@ -54,23 +54,23 @@ class Cell:
 
     def read_distance_map(self, name):
         return self.read_volume_from_group("analysis", name + "_distance_map")
-    
+
     def get_masks(self):
         return self.get_data_type("masks")
-    
+
     def get_labelmaps(self):
         return self.get_data_type("labelmaps")
-    
+
     def get_filaments(self):
         return self.get_data_type("filaments")
-    
+
     def get_data_type(self, data_type):
         res = []
         if data_type in self.file.attrs:
             for name, path in self.file.attrs[data_type].items():
                 res.append(name)
         return res
-    
+
     def compute_volumes(self):
         voxel = self.file.attrs['pixelToUM']**3
         all_volumes = {}
@@ -84,7 +84,7 @@ class Cell:
                     v = np.count_nonzero(self.read_volume(orga))*voxel
                     all_volumes[orga] = v
         cellbounds = self.get_bounds()
-        if cellbounds:        
+        if cellbounds:
             vol_all = np.count_nonzero(self.read_volume(cellbounds))*voxel
         rows = []
         for orga, v in all_volumes.items():
